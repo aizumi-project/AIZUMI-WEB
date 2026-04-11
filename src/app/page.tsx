@@ -1,0 +1,166 @@
+"use client";
+
+import { BackgroundBlobs } from "@/components/BackgroundBlobs";
+import SnsSection from "@/components/SnsSection";
+import { useLanguage } from "@/context/LanguageContext";
+import { PAGE_TRANSITION } from "@/lib/constants";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+
+const HERO_CONTENT = {
+  JP: {
+    tagline: "「鮮やかな藍の彩りと静謐な墨の落ち着きを」",
+    description: [
+      "目を奪うような藍色の美しさと心を鎮める墨色の深み。",
+      "私が愛するこの二つの色が混ざり合う瞬間を、映像と音楽で表現したいという想いから「藍墨（あいずみ）」は始まりました。",
+      "華やかさと静寂が同居する、唯一無二の心地よい世界観をお届けします。"
+    ],
+    project: "クリエイティブ・プロジェクト"
+  },
+  EN: {
+    tagline: "\"Vibrant indigo hues meet the tranquil depths of ink.\"",
+    description: [
+      "The striking beauty of indigo and the soul-calming depth of sumi ink.",
+      "AIZUMI was born from a desire to express the moment these two beloved colors intertwine through visual art and music.",
+      "We deliver a unique and immersive world where splendor and silence coexist in harmony."
+    ],
+    project: "Creative Project"
+  }
+};
+
+const MEMBERS = [
+  {
+    id: "aoi",
+    name: { JP: "AOI（アオイ）", EN: "AOI" },
+    role: { JP: "クリエイター ＆ ボーカル", EN: "Creator & Vocal" },
+    tag: { JP: "「藍」の彩りを担う、プロジェクトの核。", EN: "The vibrant core of 'Indigo.'" },
+    bio: {
+      JP: "実在する男性クリエイター兼ボーカル。映像制作を中心に活動し、映像の世界観に合わせて自ら歌唱やMIXも手がける。映像と音を融合させた「藍」の表現で、藍墨の世界に鮮やかな色彩を吹き込む。",
+      EN: "A real male creator and vocalist. Primarily focused on filmmaking, he also handles singing and mixing to seamlessly match his visual creations. Through his 'Indigo' expressions blending video and sound, he breathes vibrant color into the world of AIZUMI."
+    },
+    color: "group-hover:text-blue-400",
+    labelColor: "text-blue-400"
+  },
+  {
+    id: "kuroko",
+    name: { JP: "KUROKO（クロコ）", EN: "KUROKO" },
+    role: { JP: "バーチャル・ボーカル", EN: "Virtual Vocal" },
+    tag: { JP: "「墨」の深みを与える、もう一人の自分。", EN: "The profound depth of 'Ink.'" },
+    bio: {
+      JP: "AOIのボイスを高度な編集技術によって女性化させた架空のキャラクター。女性ボーカルに適した楽曲を表現する際に登場する。静謐で落ち着きのある「墨」の歌声と存在感で、映像作品の世界に奥行きと神秘性を添える。",
+      EN: "A fictional character created by feminizing AOI's voice through advanced audio editing. She appears when expressing songs best suited for female vocals. With her serene 'Ink' voice and presence, she adds depth and mystery to the visual works."
+    },
+    color: "group-hover:text-blue-400",
+    labelColor: "text-blue-400"
+  }
+];
+
+interface LocalizedString {
+  JP: string;
+  EN: string;
+}
+
+const getText = (obj: LocalizedString, lang: string) => (lang === "JP" ? obj.JP : obj.EN);
+
+export default function HomePage() {
+  const { lang } = useLanguage();
+  const content = lang === "JP" ? HERO_CONTENT.JP : HERO_CONTENT.EN;
+
+  const arrowIcon = (
+    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
+  );
+
+  return (
+    <main className="relative min-h-screen bg-[#0a0e12] flex items-center justify-center overflow-hidden px-6">
+      <BackgroundBlobs />
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={lang} // 言語が変わるたびに再マウント
+          {...PAGE_TRANSITION}
+          className="relative z-10 text-center max-w-4xl mx-auto mt-16 md:mt-0"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="mb-8 relative">
+              <span aria-hidden="true" className="text-xs sm:text-sm md:text-base font-black text-blue-500/20 tracking-[1.2em] sm:tracking-[1.5em] block mb-2 ml-[0.6em] sm:ml-[0.75em] transition-colors duration-1000 uppercase">
+                藍 墨
+              </span>
+              <h1 className="text-6xl xs:text-7xl sm:text-8xl md:text-9xl font-black italic tracking-tighter leading-none select-none bg-clip-text text-transparent bg-linear-to-br from-blue-400 via-blue-500 to-blue-700 drop-shadow-[0_10px_50px_rgba(59,130,246,0.25)]">
+                AIZUMI
+              </h1>
+            </div>
+
+            <p className="text-blue-400/40 text-[9px] sm:text-xs tracking-[1.2em] sm:tracking-[1.5em] uppercase mb-12 ml-[1.2em] sm:ml-[1.5em] font-bold">
+              {content.project}
+            </p>
+
+            <div className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-12 font-medium opacity-80">
+              <p className="text-blue-400 font-bold mb-4 text-base sm:text-lg">
+                {content.tagline}
+              </p>
+              {content.description.map((text, i) => (
+                <p key={text} className="mb-4">
+                  {text}
+                  {i === 1 && <br className="hidden sm:block" />}
+                </p>
+              ))}
+              {lang === "EN" && (
+                <div className="pt-4 border-t border-white/5">
+                  <p className="text-[10px] text-gray-600 italic">
+                    * English translations on this site are generated by Gemini (AI).
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/works"
+                className="group relative px-10 py-4 bg-blue-500 text-black rounded-full font-black tracking-tighter transition-all hover:scale-105 hover:bg-blue-400 w-full sm:w-64 text-center shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+              >
+                <span className="flex items-center justify-center gap-2">
+                  VIEW WORKS {arrowIcon}
+                </span>
+              </Link>
+              
+              <Link
+                href="/assets"
+                className="group px-10 py-4 bg-white/5 border border-white/10 text-white rounded-full font-black tracking-tighter transition-all hover:bg-white/10 w-full sm:w-64 text-center backdrop-blur-sm"
+              >
+                GET ASSETS
+              </Link>
+            </div>
+
+            {/* SNS Section */}
+            <SnsSection />
+
+            {/* Members Section */}
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="mt-32 grid grid-cols-1 sm:grid-cols-2 gap-12 sm:gap-24 border-t border-white/5 pt-20"
+            >
+              {MEMBERS.map((member) => (
+                <div key={member.id} className="text-left group cursor-default">
+                  <h3 className={`text-3xl font-black tracking-tighter text-white mb-2 ${member.color} transition-all duration-500 group-hover:translate-x-2`}>
+                    {getText(member.name, lang)}
+                  </h3>
+                  <p className={`text-[10px] ${member.labelColor} font-bold uppercase tracking-widest mb-3`}>{getText(member.role, lang)}</p>
+                  <p className="text-xs font-bold text-gray-300 mb-3 leading-relaxed">{getText(member.tag, lang)}</p>
+                  <p className="text-xs text-gray-500 leading-relaxed max-w-[320px] opacity-80 group-hover:opacity-100 transition-opacity">{getText(member.bio, lang)}</p>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </AnimatePresence>
+    </main>
+  );
+}
